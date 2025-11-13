@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-13T20:24:28.000Z",
+  "updatedAt": "2025-11-13T20:29:23.000Z",
   "createdAt": "2025-11-13T18:35:38.193Z",
   "id": "DNwKD3CumlKJm0Gs",
   "name": "BackUp n8n Github",
@@ -117,7 +117,7 @@
         },
         "filePath": "={{ $('SetVariables').item.json.GITHUB_REPO_FOLDER }}/{{ $('Retrieve workflows').item.json.id }}.json",
         "fileContent": "={{ $('To base64').item.json.data }}",
-        "commitMessage": "=chore(backup): Workflow first safe {{ $('Retrieve workflows').item.json.name }} with file  {{ $('Commit date & file name').item.json.fileName }}"
+        "commitMessage": "=chore(backup): Workflow first safe '{{ $('Retrieve workflows').item.json.name }}' with file  {{ $('Commit date & file name').item.json.fileName }}"
       },
       "id": "8abba016-1f34-420a-b10b-3c8e44297725",
       "name": "Update file",
@@ -151,7 +151,7 @@
         },
         "filePath": "={{ $('SetVariables').item.json.GITHUB_REPO_FOLDER }}/{{ $('Retrieve workflows').item.json.id }}.json",
         "fileContent": "={{ $('To base64').item.json.data }}",
-        "commitMessage": "=chore(backup): Workflow update {{ $('Retrieve workflows').item.json.name }} with file  {{ $('Commit date & file name').item.json.fileName }}"
+        "commitMessage": "=chore(backup): Workflow update '{{ $('Retrieve workflows').item.json.name }}' with file  {{ $('Commit date & file name').item.json.fileName }}"
       },
       "id": "d55efcc7-5873-4c9a-b374-b7b31814905b",
       "name": "Upload file",
@@ -471,7 +471,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "cbeeac51-be76-4d06-9f3f-c3faf28aaf64",
+  "versionId": "54d8628f-b7bc-47c3-9183-e9db975e2ee5",
   "triggerCount": 1,
   "shared": [
     {
