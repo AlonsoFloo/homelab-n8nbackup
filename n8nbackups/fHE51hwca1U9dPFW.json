@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-13T20:46:31.000Z",
+  "updatedAt": "2025-11-13T21:27:17.000Z",
   "createdAt": "2025-11-12T21:29:51.733Z",
   "id": "fHE51hwca1U9dPFW",
   "name": "PrixEssences",
@@ -8,28 +8,38 @@
   "nodes": [
     {
       "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $('Get row(s)1').first().json.price }}",
+              "operation": "notEqual",
+              "value2": "={{ $json.price }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2672,
+        -64
+      ],
+      "id": "9cc17928-bff3-46d9-9094-e546a9299b06",
+      "name": "Price Changed?"
+    },
+    {
+      "parameters": {
         "url": "=https://www.aral.de/fr_lu/luxembourg/home/carburants-et-prix/prix-actuels-des-carburants.html",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        -624,
-        -448
+        1488,
+        -80
       ],
-      "id": "d2f875aa-2d21-4c18-b691-5faab6052c5a",
-      "name": "HTTP Request Aral"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        -80,
-        -336
-      ],
-      "id": "da6878c9-7a6b-4990-b0ae-945b2591f503",
-      "name": "Merge"
+      "id": "40830054-3932-420a-88ae-cdc266a8095d",
+      "name": "HTTP Request Aral1"
     },
     {
       "parameters": {
@@ -56,18 +66,18 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        -368,
-        -448
+        1760,
+        -80
       ],
-      "id": "88dcbea9-4647-427f-8620-f884d995d86f",
-      "name": "HTML"
+      "id": "a61fd07f-799f-420f-b3a8-34f0fb2747be",
+      "name": "HTML1"
     },
     {
       "parameters": {
         "rule": {
           "interval": [
             {
-              "triggerAtHour": 4
+              "field": "hours"
             }
           ]
         }
@@ -75,33 +85,11 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        -1264,
-        -352
+        736,
+        -80
       ],
-      "id": "0af3d206-9051-4462-b81c-dd3dcb172163",
-      "name": "Schedule Trigger"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.stopAndError",
-      "typeVersion": 1,
-      "position": [
-        -160,
-        80
-      ],
-      "id": "16fca884-5414-483e-9eb5-374109091692",
-      "name": "Stop and Error"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        -960,
-        -352
-      ],
-      "id": "112e21e3-cde9-4134-b192-3008b2167197",
-      "name": "Starter"
+      "id": "6a3499d7-62c5-4a07-88df-e7b9add10ef3",
+      "name": "Schedule Trigger1"
     },
     {
       "parameters": {
@@ -116,8 +104,7 @@
         "filters": {
           "conditions": [
             {
-              "keyName": "day",
-              "keyValue": "={{ $('formattedTodayDate').item.json.formattedTodayDate }}"
+              "keyValue": "=1"
             }
           ]
         },
@@ -126,27 +113,11 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        144,
-        -112
+        2240,
+        48
       ],
-      "id": "982a8ad7-f613-42ea-91f4-a00950a232f8",
-      "name": "Get row(s)"
-    },
-    {
-      "parameters": {
-        "operation": "formatDate",
-        "date": "={{ $json.timestamp }}",
-        "outputFieldName": "formattedTodayDate",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.dateTime",
-      "typeVersion": 2,
-      "position": [
-        -640,
-        -208
-      ],
-      "id": "d15bc9f4-6e2a-4186-9644-f7cf570b620e",
-      "name": "formattedTodayDate"
+      "id": "23e37332-cf3e-4758-b925-030e45ed4a03",
+      "name": "Get row(s)1"
     },
     {
       "parameters": {
@@ -155,63 +126,181 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        128,
-        -336
+        2224,
+        -176
       ],
-      "id": "551edea1-9e73-4756-b78a-24dc58b09c3b",
-      "name": "ExtractPrice"
+      "id": "ab20ff1b-b1b1-4064-8ac2-c2dc492cf997",
+      "name": "ExtractPrice1"
     },
     {
       "parameters": {},
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        384,
-        -224
+        2480,
+        -64
       ],
-      "id": "37d82532-d116-4ea6-a47e-0681be62148e",
-      "name": "Merge1"
+      "id": "61be90ec-d73d-427f-845e-07e611f0e423",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        -80
+      ],
+      "id": "a42af4a3-0a34-47ad-a804-9df9f99bd2ce",
+      "name": "Starter"
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  \"N8N_EMAIL_NOTIFIER_URL\": \"https://script.google.com/macros/s/AKfycby414GgDeIKkZzLF0fbNDspkQQkL7Lxmx9Q7k5rdJZM0IqRW1bd7LesKMTsuw9hecqaFA/exec\",\n  \"N8N_EMAIL_NOTIFIER_KEY\": \"yEo4vinaMoRgZQcfyBhlIjLvrVgfcgjQXAWd0Y6ZnYMJeXbGJf\"\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1008,
+        -80
+      ],
+      "id": "a39787ca-ed60-4ef8-b1f1-96697a6399d7",
+      "name": "SetVariables"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('SetVariables').item.json.N8N_EMAIL_NOTIFIER_URL }}",
+        "responseFormat": "string",
+        "jsonParameters": true,
+        "options": {},
+        "queryParametersJson": "={\n  \"key\": \"{{ $('SetVariables').item.json.N8N_EMAIL_NOTIFIER_KEY }}\",\n  \"mode\": \"free\",\n  \"subject\": \"Nez gaz price\",\n  \"message\": \"New of {{ $('Merge3').item.json.fuel }} price is {{ $('ExtractPrice1').item.json.price }}\"\n}"
+      },
+      "id": "2812ceb1-41b3-4bc8-84d8-9d3adac28e8b",
+      "name": "Send to Google Apps Script1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        -208
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "wX9msUMUQxknuOuS",
+          "mode": "list",
+          "cachedResultName": "GAZ_PRICE",
+          "cachedResultUrl": "/projects/FydFnKWhhgJ81Gd1/datatables/wX9msUMUQxknuOuS"
+        },
+        "filters": {
+          "conditions": [
+            {}
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "price": "={{ $('Price Changed?').item.json.price }}"
+          },
+          "matchingColumns": [
+            "price"
+          ],
+          "schema": [
+            {
+              "id": "price",
+              "displayName": "price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        3104,
+        -208
+      ],
+      "id": "180a59a5-1710-4075-90bb-8106af316818",
+      "name": "Update row(s)1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2896,
+        128
+      ],
+      "id": "7713fdd2-2fec-4052-99d1-48e077e73640",
+      "name": "No Operation, do nothing"
     }
   ],
   "connections": {
-    "HTTP Request Aral": {
+    "HTTP Request Aral1": {
       "main": [
         [
           {
-            "node": "HTML",
+            "node": "HTML1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Merge": {
+    "HTML1": {
       "main": [
         [
           {
-            "node": "ExtractPrice",
+            "node": "ExtractPrice1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s)1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "HTML": {
+    "Schedule Trigger1": {
       "main": [
         [
           {
-            "node": "Merge",
+            "node": "SetVariables",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Schedule Trigger": {
+    "Get row(s)1": {
       "main": [
         [
           {
-            "node": "Starter",
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "ExtractPrice1": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
             "type": "main",
             "index": 0
           }
@@ -222,61 +311,75 @@
       "main": [
         [
           {
-            "node": "HTTP Request Aral",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "formattedTodayDate",
+            "node": "HTTP Request Aral1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "formattedTodayDate": {
+    "Price Changed?": {
       "main": [
         [
           {
-            "node": "Merge",
+            "node": "Send to Google Apps Script1",
             "type": "main",
-            "index": 1
-          },
+            "index": 0
+          }
+        ],
+        [
           {
-            "node": "Get row(s)",
+            "node": "No Operation, do nothing",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "ExtractPrice": {
+    "Merge3": {
       "main": [
         [
           {
-            "node": "Merge1",
+            "node": "Price Changed?",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get row(s)": {
+    "SetVariables": {
       "main": [
         [
           {
-            "node": "Merge1",
+            "node": "Starter",
             "type": "main",
-            "index": 1
+            "index": 0
           }
         ]
+      ]
+    },
+    "Send to Google Apps Script1": {
+      "main": [
+        [
+          {
+            "node": "Update row(s)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row(s)1": {
+      "main": [
+        []
       ]
     }
   },
   "settings": {
     "executionOrder": "v1",
     "callerPolicy": "workflowsFromSameOwner",
-    "availableInMCP": false
+    "availableInMCP": false,
+    "errorWorkflow": "atpkJzfdfrnNQXE4"
   },
   "staticData": {
     "node:Schedule Trigger": {
@@ -287,7 +390,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "cd4e5690-76b6-4509-8309-ed7ec5b7c395",
+  "versionId": "f6425be2-ff13-4c23-b4ff-6fb2b697d4b2",
   "triggerCount": 1,
   "shared": [
     {
