@@ -5,6 +5,16 @@ on:
     paths:
       - 'n8nbackups/**.json'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+
 jobs:
   update-readme:
     runs-on: ubuntu-latest
@@ -20,7 +30,7 @@ jobs:
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: chore(docs): update n8nbackups README [skip ci]
+          commit_message: "chore(docs): update n8nbackups README [skip ci]"
           file_pattern: n8nbackups/README.md
           commit_user_name: n8n-backup-bot
           commit_user_email: n8n-backup-bot@users.noreply.github.com
