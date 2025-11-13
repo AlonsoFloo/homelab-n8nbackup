@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-13T21:27:17.000Z",
+  "updatedAt": "2025-11-13T21:31:25.000Z",
   "createdAt": "2025-11-12T21:29:51.733Z",
   "id": "fHE51hwca1U9dPFW",
   "name": "PrixEssences",
@@ -26,20 +26,6 @@
       ],
       "id": "9cc17928-bff3-46d9-9094-e546a9299b06",
       "name": "Price Changed?"
-    },
-    {
-      "parameters": {
-        "url": "=https://www.aral.de/fr_lu/luxembourg/home/carburants-et-prix/prix-actuels-des-carburants.html",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [
-        1488,
-        -80
-      ],
-      "id": "40830054-3932-420a-88ae-cdc266a8095d",
-      "name": "HTTP Request Aral1"
     },
     {
       "parameters": {
@@ -244,20 +230,23 @@
       ],
       "id": "7713fdd2-2fec-4052-99d1-48e077e73640",
       "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.aral.de/fr_lu/luxembourg/home/carburants-et-prix/prix-actuels-des-carburants.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1488,
+        -80
+      ],
+      "id": "40830054-3932-420a-88ae-cdc266a8095d",
+      "name": "HTTP Request Ara1"
     }
   ],
   "connections": {
-    "HTTP Request Aral1": {
-      "main": [
-        [
-          {
-            "node": "HTML1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "HTML1": {
       "main": [
         [
@@ -311,7 +300,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request Aral1",
+            "node": "HTTP Request Ara1",
             "type": "main",
             "index": 0
           }
@@ -373,6 +362,17 @@
       "main": [
         []
       ]
+    },
+    "HTTP Request Ara1": {
+      "main": [
+        [
+          {
+            "node": "HTML1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -390,7 +390,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "f6425be2-ff13-4c23-b4ff-6fb2b697d4b2",
+  "versionId": "d30361f2-8079-4dad-807a-832fa67746e4",
   "triggerCount": 1,
   "shared": [
     {
