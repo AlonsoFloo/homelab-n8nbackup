@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-13T21:31:25.000Z",
+  "updatedAt": "2025-11-13T21:40:17.000Z",
   "createdAt": "2025-11-12T21:29:51.733Z",
   "id": "fHE51hwca1U9dPFW",
   "name": "PrixEssences",
@@ -11,9 +11,9 @@
         "conditions": {
           "string": [
             {
-              "value1": "={{ $('Get row(s)1').first().json.price }}",
+              "value1": "={{ $('Extract Diesel price').item.json.price }}",
               "operation": "notEqual",
-              "value2": "={{ $json.price }}"
+              "value2": "={{ $('Keep latest price').item.json.price }}"
             }
           ]
         }
@@ -52,7 +52,7 @@
       "type": "n8n-nodes-base.html",
       "typeVersion": 1.2,
       "position": [
-        1760,
+        1536,
         -80
       ],
       "id": "a61fd07f-799f-420f-b3a8-34f0fb2747be",
@@ -71,70 +71,18 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
-        736,
+        512,
         -80
       ],
       "id": "6a3499d7-62c5-4a07-88df-e7b9add10ef3",
       "name": "Schedule Trigger1"
     },
     {
-      "parameters": {
-        "operation": "get",
-        "dataTableId": {
-          "__rl": true,
-          "value": "wX9msUMUQxknuOuS",
-          "mode": "list",
-          "cachedResultName": "GAZ_PRICE",
-          "cachedResultUrl": "/projects/FydFnKWhhgJ81Gd1/datatables/wX9msUMUQxknuOuS"
-        },
-        "filters": {
-          "conditions": [
-            {
-              "keyValue": "=1"
-            }
-          ]
-        },
-        "limit": 1
-      },
-      "type": "n8n-nodes-base.dataTable",
-      "typeVersion": 1,
-      "position": [
-        2240,
-        48
-      ],
-      "id": "23e37332-cf3e-4758-b925-030e45ed4a03",
-      "name": "Get row(s)1"
-    },
-    {
-      "parameters": {
-        "jsCode": "// Input data from previous node\nconst data = items[0].json;\n\n// Find index of \"Diesel*\"\nconst dieselIndex = data.name.indexOf(\"Diesel*\");\n\n// Get the corresponding price\nconst dieselPrice = dieselIndex !== -1 ? data.prices[dieselIndex] : null;\n\n// Return as new item\nreturn [\n  {\n    json: {\n      fuel: \"Diesel*\",\n      price: dieselPrice\n    }\n  }\n];"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        2224,
-        -176
-      ],
-      "id": "ab20ff1b-b1b1-4064-8ac2-c2dc492cf997",
-      "name": "ExtractPrice1"
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 3.2,
-      "position": [
-        2480,
-        -64
-      ],
-      "id": "61be90ec-d73d-427f-845e-07e611f0e423",
-      "name": "Merge3"
-    },
-    {
       "parameters": {},
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        1216,
+        992,
         -80
       ],
       "id": "a42af4a3-0a34-47ad-a804-9df9f99bd2ce",
@@ -147,7 +95,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1008,
+        784,
         -80
       ],
       "id": "a39787ca-ed60-4ef8-b1f1-96697a6399d7",
@@ -159,7 +107,7 @@
         "responseFormat": "string",
         "jsonParameters": true,
         "options": {},
-        "queryParametersJson": "={\n  \"key\": \"{{ $('SetVariables').item.json.N8N_EMAIL_NOTIFIER_KEY }}\",\n  \"mode\": \"free\",\n  \"subject\": \"Nez gaz price\",\n  \"message\": \"New of {{ $('Merge3').item.json.fuel }} price is {{ $('ExtractPrice1').item.json.price }}\"\n}"
+        "queryParametersJson": "={\n  \"key\": \"{{ $('SetVariables').item.json.N8N_EMAIL_NOTIFIER_KEY }}\",\n  \"mode\": \"free\",\n  \"subject\": \"Nez gaz price\",\n  \"message\": \"New of {{ $('New.Old.Price').item.json.fuel }} price is {{ $('Extract Diesel price').item.json.price }}\"\n}"
       },
       "id": "2812ceb1-41b3-4bc8-84d8-9d3adac28e8b",
       "name": "Send to Google Apps Script1",
@@ -171,19 +119,38 @@
       ]
     },
     {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2896,
+        128
+      ],
+      "id": "7713fdd2-2fec-4052-99d1-48e077e73640",
+      "name": "No Operation, do nothing"
+    },
+    {
       "parameters": {
-        "operation": "update",
+        "url": "=https://www.aral.de/fr_lu/luxembourg/home/carburants-et-prix/prix-actuels-des-carburants.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1264,
+        -80
+      ],
+      "id": "40830054-3932-420a-88ae-cdc266a8095d",
+      "name": "HTTP Request Ara1"
+    },
+    {
+      "parameters": {
         "dataTableId": {
           "__rl": true,
           "value": "wX9msUMUQxknuOuS",
           "mode": "list",
           "cachedResultName": "GAZ_PRICE",
           "cachedResultUrl": "/projects/FydFnKWhhgJ81Gd1/datatables/wX9msUMUQxknuOuS"
-        },
-        "filters": {
-          "conditions": [
-            {}
-          ]
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -217,33 +184,89 @@
         -208
       ],
       "id": "180a59a5-1710-4075-90bb-8106af316818",
-      "name": "Update row(s)1",
-      "alwaysOutputData": true
-    },
-    {
-      "parameters": {},
-      "type": "n8n-nodes-base.noOp",
-      "typeVersion": 1,
-      "position": [
-        2896,
-        128
-      ],
-      "id": "7713fdd2-2fec-4052-99d1-48e077e73640",
-      "name": "No Operation, do nothing"
+      "name": "Insert new price",
+      "alwaysOutputData": false
     },
     {
       "parameters": {
-        "url": "=https://www.aral.de/fr_lu/luxembourg/home/carburants-et-prix/prix-actuels-des-carburants.html",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "wX9msUMUQxknuOuS",
+          "mode": "list",
+          "cachedResultName": "GAZ_PRICE",
+          "cachedResultUrl": "/projects/FydFnKWhhgJ81Gd1/datatables/wX9msUMUQxknuOuS"
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1872,
+        96
+      ],
+      "id": "23e37332-cf3e-4758-b925-030e45ed4a03",
+      "name": "Get price history"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "updatedAt",
+              "order": "descending"
+            }
+          ]
+        },
         "options": {}
       },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
       "position": [
-        1488,
-        -80
+        2032,
+        96
       ],
-      "id": "40830054-3932-420a-88ae-cdc266a8095d",
-      "name": "HTTP Request Ara1"
+      "id": "45af8eeb-744e-4680-8209-482525aa0662",
+      "name": "Sort price history"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        2192,
+        96
+      ],
+      "id": "17b01850-cc34-4cdc-a444-835772dbe282",
+      "name": "Keep latest price"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input data from previous node\nconst data = items[0].json;\n\n// Find index of \"Diesel*\"\nconst dieselIndex = data.name.indexOf(\"Diesel*\");\n\n// Get the corresponding price\nconst dieselPrice = dieselIndex !== -1 ? data.prices[dieselIndex] : null;\n\n// Return as new item\nreturn [\n  {\n    json: {\n      fuel: \"Diesel*\",\n      price: dieselPrice\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2016,
+        -240
+      ],
+      "id": "ab20ff1b-b1b1-4064-8ac2-c2dc492cf997",
+      "name": "Extract Diesel price"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2480,
+        -64
+      ],
+      "id": "61be90ec-d73d-427f-845e-07e611f0e423",
+      "name": "New.Old.Price"
     }
   ],
   "connections": {
@@ -251,12 +274,12 @@
       "main": [
         [
           {
-            "node": "ExtractPrice1",
+            "node": "Extract Diesel price",
             "type": "main",
             "index": 0
           },
           {
-            "node": "Get row(s)1",
+            "node": "Get price history",
             "type": "main",
             "index": 0
           }
@@ -268,28 +291,6 @@
         [
           {
             "node": "SetVariables",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get row(s)1": {
-      "main": [
-        [
-          {
-            "node": "Merge3",
-            "type": "main",
-            "index": 1
-          }
-        ]
-      ]
-    },
-    "ExtractPrice1": {
-      "main": [
-        [
-          {
-            "node": "Merge3",
             "type": "main",
             "index": 0
           }
@@ -325,17 +326,6 @@
         ]
       ]
     },
-    "Merge3": {
-      "main": [
-        [
-          {
-            "node": "Price Changed?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "SetVariables": {
       "main": [
         [
@@ -351,16 +341,11 @@
       "main": [
         [
           {
-            "node": "Update row(s)1",
+            "node": "Insert new price",
             "type": "main",
             "index": 0
           }
         ]
-      ]
-    },
-    "Update row(s)1": {
-      "main": [
-        []
       ]
     },
     "HTTP Request Ara1": {
@@ -368,6 +353,66 @@
         [
           {
             "node": "HTML1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert new price": {
+      "main": [
+        []
+      ]
+    },
+    "Get price history": {
+      "main": [
+        [
+          {
+            "node": "Sort price history",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sort price history": {
+      "main": [
+        [
+          {
+            "node": "Keep latest price",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep latest price": {
+      "main": [
+        [
+          {
+            "node": "New.Old.Price",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Extract Diesel price": {
+      "main": [
+        [
+          {
+            "node": "New.Old.Price",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "New.Old.Price": {
+      "main": [
+        [
+          {
+            "node": "Price Changed?",
             "type": "main",
             "index": 0
           }
@@ -390,7 +435,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "d30361f2-8079-4dad-807a-832fa67746e4",
+  "versionId": "2a8f0152-cd62-4540-92d7-812e6aaede9f",
   "triggerCount": 1,
   "shared": [
     {
