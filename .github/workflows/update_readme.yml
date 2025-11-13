@@ -1,0 +1,26 @@
+name: Update n8nbackups README
+
+on:
+  push:
+    paths:
+      - 'n8nbackups/**.json'
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Generate README
+        run: |
+          chmod +x .github/scripts/generate_readme.sh
+          ./.github/scripts/generate_readme.sh
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: chore(docs): update n8nbackups README [skip ci]
+          file_pattern: n8nbackups/README.md
+          commit_user_name: n8n-backup-bot
+          commit_user_email: n8n-backup-bot@users.noreply.github.com
