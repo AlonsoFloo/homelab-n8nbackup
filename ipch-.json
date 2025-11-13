@@ -1,0 +1,216 @@
+{
+  "updatedAt": "2025-11-12T21:29:22.000Z",
+  "createdAt": "2025-11-09T17:36:05.786Z",
+  "id": "wpv4SKt6F7CnZDHI",
+  "name": "IPCH",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        -320
+      ],
+      "id": "48fd13e2-30f8-4b3d-a367-e38b377632e1",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "=https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/PRC_HICP_MIDX?format=JSON&lang=EN&time={{ $json.ipchkey }}&geo=FR&unit=i15&coicop=CP00",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        32,
+        -336
+      ],
+      "id": "a5abe2c8-1ec5-4324-90de-4663c7c7da93",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=What is the IPCH value of this data\n\n```json\n{{ JSON.stringify($json) }}\n```",
+        "options": {
+          "returnIntermediateSteps": true,
+          "enableStreaming": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        320,
+        -336
+      ],
+      "id": "c58e682f-5298-487e-9e96-bb631af67891",
+      "name": "AI Agent",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "deepseek/deepseek-r1-0528-qwen3-8b",
+          "mode": "list",
+          "cachedResultName": "deepseek/deepseek-r1-0528-qwen3-8b"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        -96
+      ],
+      "id": "cd6db313-0527-4574-925c-5d0858494cb7",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "XbVkbQijt2rhcZEV",
+          "name": "LLMStudio OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('IPCHKey').item.json.ipchkey }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        384,
+        -96
+      ],
+      "id": "262e2ae5-3aef-4525-97c6-1e8a01a88500",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "subtractFromDate",
+        "magnitude": "={{ $now }}",
+        "timeUnit": "months",
+        "duration": 1,
+        "outputFieldName": "lastMonth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -384,
+        -304
+      ],
+      "id": "4929124f-b7cc-4401-bece-dd853d4122ea",
+      "name": "Last month"
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $json.lastMonth }}",
+        "format": "=yyyy-MM",
+        "outputFieldName": "ipchkey",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -160,
+        -336
+      ],
+      "id": "9b56e6c0-c221-4bf8-af9b-f0a7b4a3b113",
+      "name": "IPCHKey"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Last month",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Last month": {
+      "main": [
+        [
+          {
+            "node": "IPCHKey",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IPCHKey": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "56fdd3f6-1cf1-47e7-808c-3d1e71c3978d",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-09T17:36:05.793Z",
+      "createdAt": "2025-11-09T17:36:05.793Z",
+      "role": "workflow:owner",
+      "workflowId": "wpv4SKt6F7CnZDHI",
+      "projectId": "FydFnKWhhgJ81Gd1"
+    }
+  ],
+  "tags": []
+}
