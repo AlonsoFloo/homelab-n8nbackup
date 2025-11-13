@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-13T20:00:18.000Z",
+  "updatedAt": "2025-11-13T21:21:28.000Z",
   "createdAt": "2025-11-13T19:44:19.966Z",
   "id": "atpkJzfdfrnNQXE4",
   "name": "Global Error Notifier",
@@ -45,6 +45,7 @@
       "parameters": {
         "requestMethod": "POST",
         "url": "={{ $json.N8N_EMAIL_NOTIFIER_URL }}",
+        "responseFormat": "string",
         "jsonParameters": true,
         "options": {},
         "bodyParametersJson": "={{ JSON.stringify($('Error Trigger').item.json) }}",
@@ -101,7 +102,7 @@
   "staticData": null,
   "meta": null,
   "pinData": {},
-  "versionId": "049f73bc-869e-4dfb-ab10-93b2b5c9eddc",
+  "versionId": "265c07b2-1225-4b99-80a2-1baba08ed204",
   "triggerCount": 0,
   "shared": [
     {
