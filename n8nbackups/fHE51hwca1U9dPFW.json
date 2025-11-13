@@ -1,0 +1,312 @@
+{
+  "updatedAt": "2025-11-13T17:42:15.000Z",
+  "createdAt": "2025-11-12T21:29:51.733Z",
+  "id": "fHE51hwca1U9dPFW",
+  "name": "PrixEssences",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Extract from the html some key information\n\n```html\n{{ JSON.stringify($json.prices) }}\n```",
+        "hasOutputParser": true,
+        "options": {
+          "returnIntermediateSteps": false,
+          "enableStreaming": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        320,
+        -336
+      ],
+      "id": "8330c5ef-0be7-4a99-8d1d-a8db20d00650",
+      "name": "AI Agent",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "qwen/qwen3-vl-4b",
+          "mode": "list",
+          "cachedResultName": "qwen/qwen3-vl-4b"
+        },
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        192,
+        -96
+      ],
+      "id": "7a5a1081-3e40-483c-91c3-a397dc423342",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "XbVkbQijt2rhcZEV",
+          "name": "LLMStudio OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://www.aral.de/fr_lu/luxembourg/home/carburants-et-prix/prix-actuels-des-carburants.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -624,
+        -448
+      ],
+      "id": "d2f875aa-2d21-4c18-b691-5faab6052c5a",
+      "name": "HTTP Request Aral"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"date\": \"2025-11-12T15:55:20Z\",\n\t\"dieselPriceTTC\": 1.503,\n    \"gasolinePriceTTC\": 1.475\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        528,
+        -112
+      ],
+      "id": "42b2b418-b201-44bc-88fd-2435b6a9a7d8",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -80,
+        -336
+      ],
+      "id": "da6878c9-7a6b-4990-b0ae-945b2591f503",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        -240
+      ],
+      "id": "d274d8af-c1d9-4550-846b-e87248b4c8eb",
+      "name": "currentDate"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "prices",
+              "cssSelector": ".nr-table-component",
+              "returnValue": "html",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        -368,
+        -448
+      ],
+      "id": "88dcbea9-4647-427f-8620-f884d995d86f",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 4
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1264,
+        -352
+      ],
+      "id": "0af3d206-9051-4462-b81c-dd3dcb172163",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        -176
+      ],
+      "id": "16fca884-5414-483e-9eb5-374109091692",
+      "name": "Stop and Error"
+    },
+    {
+      "parameters": {
+        "dataToSave": {
+          "values": [
+            {
+              "key": "Name",
+              "value": "PrixEssence"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executionData",
+      "typeVersion": 1.1,
+      "position": [
+        -96,
+        -176
+      ],
+      "id": "6ad6b76d-9b41-4f66-a422-4af73f078131",
+      "name": "Execution Data"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -960,
+        -352
+      ],
+      "id": "112e21e3-cde9-4134-b192-3008b2167197",
+      "name": "Starter"
+    }
+  ],
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request Aral": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "currentDate": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Starter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Starter": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request Aral",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "currentDate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "3fc72810-be7c-49b6-9be5-66931042a04a",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-11-12T21:29:51.738Z",
+      "createdAt": "2025-11-12T21:29:51.738Z",
+      "role": "workflow:owner",
+      "workflowId": "fHE51hwca1U9dPFW",
+      "projectId": "FydFnKWhhgJ81Gd1"
+    }
+  ],
+  "tags": []
+}
