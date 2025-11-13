@@ -1,16 +1,19 @@
 {
-  "updatedAt": "2025-11-13T18:48:06.000Z",
+  "updatedAt": "2025-11-13T19:58:02.000Z",
   "createdAt": "2025-11-13T18:35:38.193Z",
   "id": "DNwKD3CumlKJm0Gs",
   "name": "BackUp n8n Github",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
       "parameters": {
         "rule": {
           "interval": [
-            {}
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
           ]
         }
       },
@@ -297,34 +300,7 @@
     },
     {
       "parameters": {
-        "url": "={{ $('SetVariables').item.json.N8N_EMAIL_NOTIFIER }}",
-        "sendQuery": true,
-        "queryParameters": {
-          "parameters": [
-            {
-              "name": "flowCompleted",
-              "value": "false"
-            },
-            {
-              "name": "failedItemName",
-              "value": "=Failed to backup {{ $('Loop Over Items').item.json.id }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.3,
-      "position": [
-        1456,
-        784
-      ],
-      "id": "33aab27e-c4ec-437f-aecd-d6ecb4646da3",
-      "name": "Failed Flows"
-    },
-    {
-      "parameters": {
-        "jsCode": "return {\n  \"N8N_EMAIL_NOTIFIER\": \"https://script.google.com/macros/s/AKfycbyhZAeTTMBGj4X4steoAQ5pRyz1tVeY2-4qFBKnVkumE90UAbcmFMCIuExYXEJtsVwlyQ/exec\",\n  \"GITHUB_REPO\": \"https://github.com/AlonsoFloo/homelab-n8nbackup\",\n  \"GITHUB_REPO_FOLDER\": \"n8nbackups\"\n}"
+        "jsCode": "return {\n  \"GITHUB_REPO\": \"https://github.com/AlonsoFloo/homelab-n8nbackup\",\n  \"GITHUB_REPO_FOLDER\": \"n8nbackups\"\n}"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -477,15 +453,24 @@
       ]
     }
   },
-  "settings": {},
-  "staticData": null,
+  "settings": {
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v0",
+    "availableInMCP": false,
+    "errorWorkflow": "atpkJzfdfrnNQXE4"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
   "meta": {
     "templateId": "4064",
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "0f8f56c0-8222-4168-b2cd-a112f885cfb4",
-  "triggerCount": 0,
+  "versionId": "db5315eb-1599-4fa5-916f-6d2e62b4618f",
+  "triggerCount": 1,
   "shared": [
     {
       "updatedAt": "2025-11-13T18:35:38.198Z",
