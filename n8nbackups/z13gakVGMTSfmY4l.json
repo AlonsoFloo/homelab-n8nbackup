@@ -1,0 +1,117 @@
+{
+  "updatedAt": "2025-11-15T11:18:49.988Z",
+  "createdAt": "2025-11-15T11:18:49.988Z",
+  "id": "z13gakVGMTSfmY4l",
+  "name": "Global Error Notifier",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "9814ca8c-08c9-4488-970d-5af82b95d4f6",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  \"N8N_EMAIL_NOTIFIER_URL\": \"https://script.google.com/macros/s/AKfycby414GgDeIKkZzLF0fbNDspkQQkL7Lxmx9Q7k5rdJZM0IqRW1bd7LesKMTsuw9hecqaFA/exec\",\n  \"N8N_EMAIL_NOTIFIER_KEY\": \"yEo4vinaMoRgZQcfyBhlIjLvrVgfcgjQXAWd0Y6ZnYMJeXbGJf\"\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        288,
+        0
+      ],
+      "id": "c07df4b4-366c-4ef9-95ae-1730358a20e6",
+      "name": "SetVariables"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        752,
+        0
+      ],
+      "id": "5e1f3c77-9513-4aaa-a317-7c6d0fadbc4b",
+      "name": "END"
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{ $json.N8N_EMAIL_NOTIFIER_URL }}",
+        "responseFormat": "string",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{ JSON.stringify($('Error Trigger').item.json) }}",
+        "queryParametersJson": "={\n  \"key\": \"{{ $json.N8N_EMAIL_NOTIFIER_KEY }}\",\n  \"mode\": \"error\"\n}"
+      },
+      "id": "26b47f59-c0ee-48c0-af1f-bad50a797ec5",
+      "name": "Send to Google Apps Script1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        496,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "SetVariables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetVariables": {
+      "main": [
+        [
+          {
+            "node": "Send to Google Apps Script1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to Google Apps Script1": {
+      "main": [
+        [
+          {
+            "node": "END",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "54a6919f-a220-4fc4-908e-70d9273f9bd7",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-15T11:18:49.994Z",
+      "createdAt": "2025-11-15T11:18:49.994Z",
+      "role": "workflow:owner",
+      "workflowId": "z13gakVGMTSfmY4l",
+      "projectId": "jJglMvx4o4FjoktY"
+    }
+  ],
+  "tags": []
+}
