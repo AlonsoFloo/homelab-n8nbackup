@@ -1,0 +1,267 @@
+{
+  "updatedAt": "2025-11-15T12:54:57.000Z",
+  "createdAt": "2025-11-15T12:37:47.372Z",
+  "id": "z5Mhv9GDq2dzNYuD",
+  "name": "Test",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        288
+      ],
+      "id": "64dc6722-93c8-4c49-a5e8-ee67489d0b80",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        288
+      ],
+      "id": "ded402e9-b808-41c7-b6d7-d41561d9d5f1",
+      "name": "START"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Can you extract the price of \"Diesel*\"\" based on this JSON ?\nJust tell me the normal price, nothing else\n\n```json\n{{ JSON.stringify($json) }}\n```",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        432,
+        288
+      ],
+      "id": "cefebce2-2bef-4639-bda8-8f425a150bdc",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "phi3:mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        288,
+        496
+      ],
+      "id": "0e38b0a7-d09f-4839-a2ee-0751ab5d5709",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "OoU3KGhRvLl5fGSx",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -272,
+        288
+      ],
+      "id": "c32c07f7-9cf8-40fa-a463-732e3e573967",
+      "name": "SetVariables"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.aral.de/fr_lu/luxembourg/home/carburants-et-prix/prix-actuels-des-carburants.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -96,
+        288
+      ],
+      "id": "d5e14271-330e-4e11-9788-312ad92c2f36",
+      "name": "Aral HTTP"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "prices",
+              "cssSelector": ".nr-table-component tr td:nth-child(2)",
+              "returnArray": true
+            },
+            {
+              "key": "name",
+              "cssSelector": ".nr-table-component tr td:nth-child(1)",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {
+          "trimValues": true,
+          "cleanUpText": true
+        }
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        96,
+        288
+      ],
+      "id": "c8b3a7de-3549-49dc-a609-cf80e0cab567",
+      "name": "Aral HTTP Table"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Date & Time').item.json.currentDate }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        496
+      ],
+      "id": "61d9a6a9-9375-4c92-a1ee-cd201584e5f5",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -464,
+        288
+      ],
+      "id": "7e6f4e0d-7846-4f25-8f4b-aebef7ec8c54",
+      "name": "Date & Time"
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "START",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetVariables": {
+      "main": [
+        [
+          {
+            "node": "Aral HTTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "START": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aral HTTP": {
+      "main": [
+        [
+          {
+            "node": "Aral HTTP Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aral HTTP Table": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "SetVariables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "581582a3-98f7-4228-89b6-fd5782d876c4",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-15T12:37:47.379Z",
+      "createdAt": "2025-11-15T12:37:47.379Z",
+      "role": "workflow:owner",
+      "workflowId": "z5Mhv9GDq2dzNYuD",
+      "projectId": "jJglMvx4o4FjoktY"
+    }
+  ],
+  "tags": []
+}
