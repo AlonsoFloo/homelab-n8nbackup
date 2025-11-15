@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-15T11:24:24.000Z",
+  "updatedAt": "2025-11-15T15:13:39.000Z",
   "createdAt": "2025-11-15T11:19:16.549Z",
   "id": "3lftMcssF0OC0X0T",
   "name": "PrixEssences",
@@ -155,7 +155,7 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "price": "={{ $('Price Changed?').item.json.price }}"
+            "price": "={{ $('Extract Diesel price').item.json.price }}"
           },
           "matchingColumns": [
             "price"
@@ -426,7 +426,7 @@
   },
   "meta": null,
   "pinData": {},
-  "versionId": "4a8a21d6-cea5-4004-8cd2-b3deec8901a9",
+  "versionId": "1d9ab9cf-bc9e-4c1a-a92f-94328a4587ba",
   "triggerCount": 1,
   "shared": [
     {
