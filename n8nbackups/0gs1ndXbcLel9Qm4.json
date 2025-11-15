@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2025-11-15T11:19:07.000Z",
+  "updatedAt": "2025-11-15T11:22:21.000Z",
   "createdAt": "2025-11-15T11:19:01.559Z",
   "id": "0gs1ndXbcLel9Qm4",
   "name": "BackUp n8n Github",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -38,7 +38,13 @@
         336,
         128
       ],
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "n8nApi": {
+          "id": "qbHqnss9qfZnEqNR",
+          "name": "n8n account"
+        }
+      }
     },
     {
       "parameters": {
@@ -87,7 +93,13 @@
       ],
       "webhookId": "354d699e-44b0-4444-9d31-af7fd4ff5561",
       "typeVersion": 1,
-      "alwaysOutputData": true
+      "alwaysOutputData": true,
+      "credentials": {
+        "githubApi": {
+          "id": "bB0kws6HSCT0FkAs",
+          "name": "GitHub account"
+        }
+      }
     },
     {
       "parameters": {
@@ -115,7 +127,13 @@
         48
       ],
       "webhookId": "27218087-8df7-474d-a39f-70cfa9c34ec8",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "githubApi": {
+          "id": "bB0kws6HSCT0FkAs",
+          "name": "GitHub account"
+        }
+      }
     },
     {
       "parameters": {
@@ -143,7 +161,13 @@
         208
       ],
       "webhookId": "ce4b561b-acb9-4cd8-b76f-4928dada9674",
-      "typeVersion": 1
+      "typeVersion": 1,
+      "credentials": {
+        "githubApi": {
+          "id": "bB0kws6HSCT0FkAs",
+          "name": "GitHub account"
+        }
+      }
     },
     {
       "parameters": {
@@ -435,11 +459,19 @@
     "availableInMCP": false,
     "errorWorkflow": "z13gakVGMTSfmY4l"
   },
-  "staticData": null,
-  "meta": null,
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": [
+        14
+      ]
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
   "pinData": {},
-  "versionId": "69b53db4-8dce-443e-9a25-b917057109b3",
-  "triggerCount": 0,
+  "versionId": "007fa629-0b37-4683-9406-6013a717a494",
+  "triggerCount": 1,
   "shared": [
     {
       "updatedAt": "2025-11-15T11:19:01.564Z",
