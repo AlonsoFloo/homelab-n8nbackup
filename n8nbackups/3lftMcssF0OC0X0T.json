@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2025-11-15T11:19:16.549Z",
+  "updatedAt": "2025-11-15T11:24:24.000Z",
   "createdAt": "2025-11-15T11:19:16.549Z",
   "id": "3lftMcssF0OC0X0T",
   "name": "PrixEssences",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -147,10 +147,10 @@
       "parameters": {
         "dataTableId": {
           "__rl": true,
-          "value": "wX9msUMUQxknuOuS",
+          "value": "Efuovxa6wVecL2fZ",
           "mode": "list",
           "cachedResultName": "GAZ_PRICE",
-          "cachedResultUrl": "/projects/FydFnKWhhgJ81Gd1/datatables/wX9msUMUQxknuOuS"
+          "cachedResultUrl": "/projects/jJglMvx4o4FjoktY/datatables/Efuovxa6wVecL2fZ"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -192,10 +192,10 @@
         "operation": "get",
         "dataTableId": {
           "__rl": true,
-          "value": "wX9msUMUQxknuOuS",
+          "value": "Efuovxa6wVecL2fZ",
           "mode": "list",
           "cachedResultName": "GAZ_PRICE",
-          "cachedResultUrl": "/projects/FydFnKWhhgJ81Gd1/datatables/wX9msUMUQxknuOuS"
+          "cachedResultUrl": "/projects/jJglMvx4o4FjoktY/datatables/Efuovxa6wVecL2fZ"
         },
         "returnAll": true
       },
@@ -206,7 +206,8 @@
         336
       ],
       "id": "48968764-9512-4e82-b84d-bc97fd91a59d",
-      "name": "Get price history"
+      "name": "Get price history",
+      "alwaysOutputData": false
     },
     {
       "parameters": {
@@ -418,11 +419,15 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger1": {
+      "recurrenceRules": []
+    }
+  },
   "meta": null,
   "pinData": {},
-  "versionId": "cc51a93c-5ffa-4397-8412-d9960d7bbfb4",
-  "triggerCount": 0,
+  "versionId": "4a8a21d6-cea5-4004-8cd2-b3deec8901a9",
+  "triggerCount": 1,
   "shared": [
     {
       "updatedAt": "2025-11-15T11:19:16.553Z",
