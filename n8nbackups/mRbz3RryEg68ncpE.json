@@ -1,0 +1,154 @@
+{
+  "updatedAt": "2025-11-16T11:36:43.000Z",
+  "createdAt": "2025-11-16T11:08:36.122Z",
+  "id": "mRbz3RryEg68ncpE",
+  "name": "Backup to Google Drive",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 12,
+              "triggerAtMinute": 30
+            },
+            {
+              "triggerAtHour": 20,
+              "triggerAtMinute": 30
+            }
+          ]
+        }
+      },
+      "id": "a3a9a7b8-52e1-4ee6-a0d6-a0b3c2f3831f",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -368,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "command": "find /gdrive -mindepth 1 -delete"
+      },
+      "id": "41a20315-536b-4667-9492-3ec5514991bb",
+      "name": "Clear Google Drive Folder",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        224,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cp -r /backups/. /gdrive/"
+      },
+      "id": "bdf29c0d-0eb9-49cf-baab-b996d3e89f02",
+      "name": "Copy Backups to Google Drive",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        448,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "command": "find /backups "
+      },
+      "id": "4e4b1940-50a7-43f9-9738-9ce316634850",
+      "name": "Lists file to backup",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "command": "find /gdrive -type f"
+      },
+      "id": "cb984c26-8cd0-4254-9c6b-47cad22b3f3b",
+      "name": "Lists file to delete",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        16,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Lists file to backup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear Google Drive Folder": {
+      "main": [
+        [
+          {
+            "node": "Copy Backups to Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lists file to backup": {
+      "main": [
+        [
+          {
+            "node": "Lists file to delete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lists file to delete": {
+      "main": [
+        [
+          {
+            "node": "Clear Google Drive Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
+  "meta": null,
+  "pinData": {},
+  "versionId": "5b20be20-8509-429f-84f9-b5117a7670ce",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2025-11-16T11:08:36.127Z",
+      "createdAt": "2025-11-16T11:08:36.127Z",
+      "role": "workflow:owner",
+      "workflowId": "mRbz3RryEg68ncpE",
+      "projectId": "jJglMvx4o4FjoktY"
+    }
+  ],
+  "tags": []
+}
