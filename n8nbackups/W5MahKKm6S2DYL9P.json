@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2025-11-22T10:55:40.000Z",
+  "updatedAt": "2025-11-22T11:33:57.000Z",
   "createdAt": "2025-11-22T10:12:18.222Z",
   "id": "W5MahKKm6S2DYL9P",
   "name": "Spotify waiting organizer",
-  "active": false,
+  "active": true,
   "isArchived": false,
   "nodes": [
     {
@@ -11,8 +11,8 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -1008,
-        -48
+        -2416,
+        80
       ],
       "id": "e841d885-503e-412d-b9f5-e1006fc10d9d",
       "name": "Start click"
@@ -22,7 +22,7 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        -768,
+        -2176,
         -48
       ],
       "id": "eff62c29-9308-4fae-ba51-0d34afe9013b",
@@ -37,7 +37,7 @@
       "type": "n8n-nodes-base.spotify",
       "typeVersion": 1,
       "position": [
-        -320,
+        -288,
         -48
       ],
       "id": "c6815a00-7f41-4292-a354-934864757e98",
@@ -54,7 +54,7 @@
         "resource": "playlist",
         "operation": "getTracks",
         "id": "={{ $json.uri }}",
-        "limit": "={{ $('SetVariables').item.json.LIMIT }}"
+        "limit": "={{ $('SetVariables').item.json.LIMIT_OF_PLAYLIST }}"
       },
       "type": "n8n-nodes-base.spotify",
       "typeVersion": 1,
@@ -73,12 +73,12 @@
     },
     {
       "parameters": {
-        "jsCode": "return {\n  \"COUNTRY\": \"FR\",\n  \"LIMIT\": 3,\n  \"PLAYLIST_PREFIX\": \"N8N - \",\n  \"CONSIDERED_BIG_ALBUM_LIMIT\": 5\n}"
+        "jsCode": "return {\n  \"COUNTRY\": \"FR\",\n  \"LIMIT_OF_PLAYLIST\": 10,\n  \"PLAYLIST_PREFIX\": \"N8N - \",\n  \"CONSIDERED_BIG_ALBUM_LIMIT\": 5\n}"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -544,
+        -1952,
         -48
       ],
       "id": "a7fd9385-5a20-4e6b-bb73-3f3510d810a3",
@@ -122,7 +122,7 @@
           "conditions": [
             {
               "id": "6b3cde13-8d50-497d-9957-300dc0950168",
-              "leftValue": "={{ $json.track_number }}",
+              "leftValue": "={{ $json.tracks.total }}",
               "rightValue": "={{ $('SetVariables').item.json.CONSIDERED_BIG_ALBUM_LIMIT }}",
               "operator": {
                 "type": "number",
@@ -236,13 +236,7 @@
     },
     {
       "parameters": {
-        "fieldsToAggregate": {
-          "fieldToAggregate": [
-            {
-              "fieldToAggregate": "snapshot_id"
-            }
-          ]
-        },
+        "aggregate": "aggregateAllItemData",
         "options": {}
       },
       "type": "n8n-nodes-base.aggregate",
@@ -279,21 +273,96 @@
     {
       "parameters": {
         "resource": "playlist",
-        "operation": "search",
-        "query": "={{ $json.PLAYLIST_PREFIX }}",
-        "returnAll": true,
-        "filters": {}
+        "operation": "getUserPlaylists",
+        "returnAll": true
       },
       "type": "n8n-nodes-base.spotify",
       "typeVersion": 1,
       "position": [
-        -320,
-        -256
+        -1472,
+        -48
       ],
       "id": "ca9b35e5-d6f5-422b-a972-4753b8dafb1c",
-      "name": "Search playlists n8n",
-      "alwaysOutputData": true,
+      "name": "Get User Playlist",
+      "alwaysOutputData": false,
       "executeOnce": true,
+      "credentials": {
+        "spotifyOAuth2Api": {
+          "id": "atSGLwt1ahOg07yl",
+          "name": "Spotify account Flo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "id",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        -1040,
+        -48
+      ],
+      "id": "6510cbce-e4d7-48d5-87cc-8e2171f2e7dc",
+      "name": "Remove Duplicates",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "954f8e7d-ebc8-4d0e-8da6-ecba364d0f99",
+              "leftValue": "={{ $json.name }}",
+              "rightValue": "={{ $('SetVariables').item.json.PLAYLIST_PREFIX }}",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -1248,
+        -48
+      ],
+      "id": "97a52908-6f5f-4a94-9caf-c97cbf176956",
+      "name": "Keep n8n playlist",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://api.spotify.com/v1/playlists/{{ $json.id }}/followers",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "spotifyOAuth2Api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -816,
+        -48
+      ],
+      "id": "14d542e8-0c42-4eb9-96de-6b7fe5e1fdd2",
+      "name": "Delete n8n playlist",
+      "alwaysOutputData": true,
       "credentials": {
         "spotifyOAuth2Api": {
           "id": "atSGLwt1ahOg07yl",
@@ -301,6 +370,87 @@
         }
       },
       "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "# DELETE OLD SPOTIFY PLAYLIST",
+        "height": 1056,
+        "width": 1184,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1584,
+        -400
+      ],
+      "typeVersion": 1,
+      "id": "dfb7f695-cea8-44ad-8427-e3e6bc512bbe",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# FINDING MUSIC TO LISTEN",
+        "height": 1056,
+        "width": 464
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -368,
+        -400
+      ],
+      "typeVersion": 1,
+      "id": "7efd24e5-6d52-4560-9618-6922eeabbf8d",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# CREATING AND ADDING PLAYLIST",
+        "height": 1056,
+        "width": 1824,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        128,
+        -400
+      ],
+      "typeVersion": 1,
+      "id": "5d7a280a-9fd3-43d2-aab6-e8e92605afef",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        -48
+      ],
+      "id": "65ac0a4e-842e-4d90-8e06-271865c178cf",
+      "name": "Aggregate deletion"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 19,
+              "triggerAtMinute": 50
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -2400,
+        -192
+      ],
+      "id": "2a660921-2e14-4961-b3b3-8418837ebedd",
+      "name": "Schedule Trigger"
     }
   ],
   "connections": {
@@ -341,7 +491,7 @@
       "main": [
         [
           {
-            "node": "Finding Waiting to listen Playlist",
+            "node": "Get User Playlist",
             "type": "main",
             "index": 0
           }
@@ -471,18 +621,88 @@
           }
         ]
       ]
+    },
+    "Get User Playlist": {
+      "main": [
+        [
+          {
+            "node": "Keep n8n playlist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep n8n playlist": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Delete n8n playlist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete n8n playlist": {
+      "main": [
+        [
+          {
+            "node": "Aggregate deletion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate deletion": {
+      "main": [
+        [
+          {
+            "node": "Finding Waiting to listen Playlist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "ENTRY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
-  "staticData": null,
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    }
+  },
   "meta": {
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "0eae95f4-7983-4da4-8dc9-15ba4277d899",
-  "triggerCount": 0,
+  "versionId": "c7708c12-45e9-4343-9d88-da00c3c985da",
+  "triggerCount": 1,
   "shared": [
     {
       "updatedAt": "2025-11-22T10:12:18.225Z",
