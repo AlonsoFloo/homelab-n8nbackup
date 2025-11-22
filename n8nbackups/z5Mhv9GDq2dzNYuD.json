@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2025-11-15T15:26:03.000Z",
+  "updatedAt": "2025-11-22T14:15:21.000Z",
   "createdAt": "2025-11-15T12:37:47.372Z",
   "id": "z5Mhv9GDq2dzNYuD",
   "name": "Test",
@@ -45,7 +45,7 @@
     },
     {
       "parameters": {
-        "model": "phi3:mini",
+        "model": "phi4-mini:latest",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
@@ -147,6 +147,152 @@
       ],
       "id": "7e6f4e0d-7846-4f25-8f4b-aebef7ec8c54",
       "name": "Date & Time"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1776,
+        1104
+      ],
+      "id": "b4c12cb8-1f75-4528-8af4-3f3c18bf2eec",
+      "name": "START1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Can you extract the price of \"Diesel*\"\" based on this JSON ?\nJust tell me the normal price, nothing else\n\n```json\n{{ JSON.stringify($json) }}\n```",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2880,
+        1104
+      ],
+      "id": "099fd2b5-9a7f-4c14-9113-e21b2e2f1e66",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": "phi4-mini:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        2736,
+        1312
+      ],
+      "id": "e43510a5-4d11-4d73-a6ce-fa98979cb96e",
+      "name": "Ollama Chat Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "OoU3KGhRvLl5fGSx",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2176,
+        1104
+      ],
+      "id": "648f1e01-418e-406e-aab0-a53177a50bbd",
+      "name": "SetVariables1"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.aral.de/fr_lu/luxembourg/home/carburants-et-prix/prix-actuels-des-carburants.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2352,
+        1104
+      ],
+      "id": "5a3f57c7-be84-432b-84bf-31806dd7bb80",
+      "name": "Aral HTTP1"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "prices",
+              "cssSelector": ".nr-table-component tr td:nth-child(2)",
+              "returnArray": true
+            },
+            {
+              "key": "name",
+              "cssSelector": ".nr-table-component tr td:nth-child(1)",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {
+          "trimValues": true,
+          "cleanUpText": true
+        }
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        2544,
+        1104
+      ],
+      "id": "35c0f242-fe38-4811-95b3-92e9952078c3",
+      "name": "Aral HTTP Table1"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Date & Time1').item.json.currentDate }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        2928,
+        1312
+      ],
+      "id": "59d159b3-f0c9-4920-b180-61a62786fefe",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        1984,
+        1104
+      ],
+      "id": "dbf4390f-22ee-4c25-89a9-78cefcb3ec87",
+      "name": "Date & Time1"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Get price of gaz in luxembourg on aral website",
+        "url": "https://www.aral.de/fr_lu/luxembourg/home/carburants-et-prix/prix-actuels-des-carburants.html",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.3,
+      "position": [
+        3408,
+        1440
+      ],
+      "id": "b32be4d3-5e5a-44b9-87c7-eb734cdcefb5",
+      "name": "HTTP Request1"
     }
   ],
   "connections": {
@@ -242,6 +388,83 @@
           }
         ]
       ]
+    },
+    "START1": {
+      "main": [
+        [
+          {
+            "node": "Date & Time1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetVariables1": {
+      "main": [
+        [
+          {
+            "node": "Aral HTTP1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aral HTTP1": {
+      "main": [
+        [
+          {
+            "node": "Aral HTTP Table1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aral HTTP Table1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time1": {
+      "main": [
+        [
+          {
+            "node": "SetVariables1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
@@ -252,7 +475,7 @@
     "templateCredsSetupCompleted": true
   },
   "pinData": {},
-  "versionId": "b2e08c92-3c7e-409a-82ee-cf64546e861c",
+  "versionId": "53d526ca-3113-4ce6-b3d7-84584eb16103",
   "triggerCount": 0,
   "shared": [
     {
