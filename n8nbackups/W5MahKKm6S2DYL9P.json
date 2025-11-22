@@ -1,0 +1,496 @@
+{
+  "updatedAt": "2025-11-22T10:55:40.000Z",
+  "createdAt": "2025-11-22T10:12:18.222Z",
+  "id": "W5MahKKm6S2DYL9P",
+  "name": "Spotify waiting organizer",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1008,
+        -48
+      ],
+      "id": "e841d885-503e-412d-b9f5-e1006fc10d9d",
+      "name": "Start click"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        -48
+      ],
+      "id": "eff62c29-9308-4fae-ba51-0d34afe9013b",
+      "name": "ENTRY"
+    },
+    {
+      "parameters": {
+        "resource": "playlist",
+        "operation": "get",
+        "id": "0HI5Nyc9CwUtACfolnbSOH"
+      },
+      "type": "n8n-nodes-base.spotify",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -48
+      ],
+      "id": "c6815a00-7f41-4292-a354-934864757e98",
+      "name": "Finding Waiting to listen Playlist",
+      "credentials": {
+        "spotifyOAuth2Api": {
+          "id": "atSGLwt1ahOg07yl",
+          "name": "Spotify account Flo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "playlist",
+        "operation": "getTracks",
+        "id": "={{ $json.uri }}",
+        "limit": "={{ $('SetVariables').item.json.LIMIT }}"
+      },
+      "type": "n8n-nodes-base.spotify",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -48
+      ],
+      "id": "4a809de8-a9db-47ea-80cb-cf3494679a35",
+      "name": "Get all waiting songs",
+      "credentials": {
+        "spotifyOAuth2Api": {
+          "id": "atSGLwt1ahOg07yl",
+          "name": "Spotify account Flo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return {\n  \"COUNTRY\": \"FR\",\n  \"LIMIT\": 3,\n  \"PLAYLIST_PREFIX\": \"N8N - \",\n  \"CONSIDERED_BIG_ALBUM_LIMIT\": 5\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -544,
+        -48
+      ],
+      "id": "a7fd9385-5a20-4e6b-bb73-3f3510d810a3",
+      "name": "SetVariables"
+    },
+    {
+      "parameters": {
+        "resource": "playlist",
+        "operation": "create",
+        "name": "={{ $('SetVariables').item.json.PLAYLIST_PREFIX }}{{ $json.track.album.artists[0].name }} - {{ $json.track.album.name }}",
+        "additionalFields": {
+          "description": "Automatic",
+          "public": "={{ false }}"
+        }
+      },
+      "type": "n8n-nodes-base.spotify",
+      "typeVersion": 1,
+      "position": [
+        368,
+        160
+      ],
+      "id": "6b59980d-e564-45f2-ad4a-df750e3981b9",
+      "name": "Create a playlist",
+      "executeOnce": false,
+      "credentials": {
+        "spotifyOAuth2Api": {
+          "id": "atSGLwt1ahOg07yl",
+          "name": "Spotify account Flo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6b3cde13-8d50-497d-9957-300dc0950168",
+              "leftValue": "={{ $json.track_number }}",
+              "rightValue": "={{ $('SetVariables').item.json.CONSIDERED_BIG_ALBUM_LIMIT }}",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        704,
+        160
+      ],
+      "id": "b90d7e27-b9e2-4f4f-9a85-03295fe4540c",
+      "name": "Is Big Album ?"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        192,
+        -48
+      ],
+      "id": "dfc80ebd-8c46-42f6-8206-941e70221bf6",
+      "name": "Loop Over Waitings"
+    },
+    {
+      "parameters": {
+        "resource": "album",
+        "id": "={{ $('Loop Over Waitings').item.json.track.album.id }}"
+      },
+      "type": "n8n-nodes-base.spotify",
+      "typeVersion": 1,
+      "position": [
+        528,
+        160
+      ],
+      "id": "e5da0639-b17c-4e57-acb0-d8e0bc3e0ce8",
+      "name": "Album to add",
+      "credentials": {
+        "spotifyOAuth2Api": {
+          "id": "atSGLwt1ahOg07yl",
+          "name": "Spotify account Flo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "tracks.items",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        96
+      ],
+      "id": "c4428fe6-4fec-4514-924a-4d847de70e67",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "resource": "playlist",
+        "id": "={{ $('Create a playlist').item.json.uri }}",
+        "trackID": "={{ $json.uri }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.spotify",
+      "typeVersion": 1,
+      "position": [
+        1408,
+        160
+      ],
+      "id": "e5043362-c55a-48e9-a052-021c9f54196a",
+      "name": "Add an Item to new playlist",
+      "credentials": {
+        "spotifyOAuth2Api": {
+          "id": "atSGLwt1ahOg07yl",
+          "name": "Spotify account Flo"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        656,
+        -272
+      ],
+      "id": "56cb12ec-8df5-4f71-a55a-fcd3a4cb1b47",
+      "name": "END"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "END LOOP",
+      "typeVersion": 1,
+      "position": [
+        1776,
+        416
+      ],
+      "id": "4f8a98fd-6252-4e89-a601-9b8cdb66189d"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "snapshot_id"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        160
+      ],
+      "id": "c946b7cc-43de-41a2-bde1-6c886be9c20d",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "resource": "artist",
+        "operation": "getTopTracks",
+        "id": "={{ $json.artists[0].uri }}",
+        "country": "={{ $('SetVariables').item.json.COUNTRY }}"
+      },
+      "type": "n8n-nodes-base.spotify",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        256
+      ],
+      "id": "83a2074c-1877-42cb-b409-6b10f1e31466",
+      "name": "Get an artist tops",
+      "credentials": {
+        "spotifyOAuth2Api": {
+          "id": "atSGLwt1ahOg07yl",
+          "name": "Spotify account Flo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "playlist",
+        "operation": "search",
+        "query": "={{ $json.PLAYLIST_PREFIX }}",
+        "returnAll": true,
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.spotify",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -256
+      ],
+      "id": "ca9b35e5-d6f5-422b-a972-4753b8dafb1c",
+      "name": "Search playlists n8n",
+      "alwaysOutputData": true,
+      "executeOnce": true,
+      "credentials": {
+        "spotifyOAuth2Api": {
+          "id": "atSGLwt1ahOg07yl",
+          "name": "Spotify account Flo"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Start click": {
+      "main": [
+        [
+          {
+            "node": "ENTRY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ENTRY": {
+      "main": [
+        [
+          {
+            "node": "SetVariables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finding Waiting to listen Playlist": {
+      "main": [
+        [
+          {
+            "node": "Get all waiting songs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SetVariables": {
+      "main": [
+        [
+          {
+            "node": "Finding Waiting to listen Playlist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all waiting songs": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Waitings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a playlist": {
+      "main": [
+        [
+          {
+            "node": "Album to add",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Big Album ?": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get an artist tops",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Waitings": {
+      "main": [
+        [
+          {
+            "node": "END",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create a playlist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Album to add": {
+      "main": [
+        [
+          {
+            "node": "Is Big Album ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Add an Item to new playlist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add an Item to new playlist": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "END LOOP": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Waitings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "END LOOP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get an artist tops": {
+      "main": [
+        [
+          {
+            "node": "Add an Item to new playlist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "0eae95f4-7983-4da4-8dc9-15ba4277d899",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2025-11-22T10:12:18.225Z",
+      "createdAt": "2025-11-22T10:12:18.225Z",
+      "role": "workflow:owner",
+      "workflowId": "W5MahKKm6S2DYL9P",
+      "projectId": "jJglMvx4o4FjoktY"
+    }
+  ],
+  "tags": []
+}
