@@ -6,4 +6,5 @@
 | mRbz3RryEg68ncpE.json | Backup to Google Drive |
 | z13gakVGMTSfmY4l.json | Global Error Notifier |
 | 3lftMcssF0OC0X0T.json | PrixEssences |
+| W5MahKKm6S2DYL9P.json | Spotify waiting organizer |
 | z5Mhv9GDq2dzNYuD.json | Test |
